@@ -50,38 +50,38 @@ Copy the following functions inside the contract:
         return sepoliaConfig;
     }
 
-    function getAnvilEthConfig() public pure returns (NetworkConfig memory){
+    function getAnvilEth() public pure returns (Network memory){
         
     }
 ```
 
 We decided to structure the information we need depending on the chain we are testing on. We use a `struct` to hold this information for every chain. You might think that we could have gotten away with a simple `address variable` but that changes if we need to store multiple addresses or even more blockchain-specific information.
 
-For now, we created a `getSepoliaEthConfig` that returns the NetworkConfig struct, which contains the `priceFeed` address.
+For now, we created a `getSepoliaEth` that returns the Network struct, which contains the `priceFeed` address.
 
 What do we need to do to integrate this inside the deployment script?
 
-First of all, we need to be aware of the chain we are using. We can do this in the constructor of the HelperConfig contract.
+First of all, we need to be aware of the chain we are using. We can do this in the constructor of the Helper contract.
 
-Update the `HelperConfig` as follows:
+Update the `Helper` as follows:
 
 ```javascript
-    NetworkConfig public activeNetworkConfig;
+    Network public activeNetwork;
 
-    struct NetworkConfig {
+    struct Network {
         address priceFeed; // ETH/USD price feed address
     }
 
     constructor(){
         if (block.chainid == 11155111) {
-            activeNetowrkConfig = getSepoliaEthConfig();
+            activeNetwork = getSepoliaEth();
         } else {
-            activeNetowrkConfig = getAnvilEthConfig();
+            activeNetwork = getAnvilEth();
         }
     }
 ```
 
-As you can see, we've defined a new state variable, called activeNetworkConfig which will be the struct that gets queried for blockchain-specific information. We will check the `block.chainId` at the constructor level, and depending on that value we select the appropriate config.
+As you can see, we've defined a new state variable, called activeNetwork which will be the struct that gets queried for blockchain-specific information. We will check the `block.chainId` at the constructor level, and depending on that value we select the appropriate config.
 
 The `block.chainId` in Ethereum refers to the unique identifier of the blockchain network in which the current block is being processed. This value is determined by the Ethereum network itself and is typically used by smart contracts to ensure that they are interacting with the intended network. Go on [chainlist.org](https://chainlist.org/) to find out the `ChainID`'s of different blockchains.
 
