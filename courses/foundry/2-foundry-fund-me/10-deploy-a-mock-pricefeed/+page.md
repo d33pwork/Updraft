@@ -74,9 +74,9 @@ Update the `HelperConfig` as follows:
 
     constructor(){
         if (block.chainid == 11155111) {
-            activeNetowrkConfig = getSepoliaEthConfig();
+            activeNetworkConfig = getSepoliaEthConfig();
         } else {
-            activeNetowrkConfig = getAnvilEthConfig();
+            activeNetworkConfig = getAnvilEthConfig();
         }
     }
 ```
